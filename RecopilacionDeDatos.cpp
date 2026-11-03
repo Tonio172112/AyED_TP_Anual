@@ -1,5 +1,5 @@
 #include <iostream>
-// Programa para recopilacion arcihvos
+// Programa para recopilacion archivos
 using namespace std;
 
 // Hacemos un struct para almacenar la fecha para el struct de sismos
