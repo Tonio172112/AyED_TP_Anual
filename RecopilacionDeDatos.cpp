@@ -1,5 +1,5 @@
 #include <iostream>
-// Porgarma para arhvos
+// Programa para recopilacion arcihvos
 using namespace std;
 
 // Hacemos un struct para almacenar la fecha para el struct de sismos
