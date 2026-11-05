@@ -38,6 +38,5 @@ Para cumplir con las restricciones de la cátedra de no utilizar bibliotecas ext
 
 ## 📂 Estructura del Repositorio
 * `/RecopilacionDeDatos.cpp` -> Código fuente del módulo de carga y almacenamiento de datos científicos.
-* `/[Nombre_Consultas].cpp` -> Código fuente del sistema de menús y procesamiento de consultas analíticas.
-* `/Archivos_Anexos/` -> Carpeta con los archivos `.dat` o `.txt` generados para las pruebas funcionales.
-* `/Documentacion/` -> Manual de usuario, detalles metodológicos de resolución y capturas de pantalla de ejecución.
+* `/LecturaDeDatos.cpp` -> Código fuente del sistema de lectura de los archivos binarios generados.
+* `/Archivos/` -> Carpeta con los archivos `.dat` o `.txt` generados para las pruebas.
