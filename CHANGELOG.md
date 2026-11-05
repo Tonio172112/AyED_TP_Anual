@@ -11,8 +11,8 @@
   - Búsqueda binaria ❌
   - Apareo ❌
   - Estructuras de datos ✅
-  - Sobrecarga de funciones 🧑‍💻
-  - Archivos (tanto lectura como escritura) ❌
+  - Sobrecarga de funciones ✅
+  - Archivos (tanto lectura como escritura) ✅
   - Búsqueda directa ❌
   - Corte de control ❌
 
