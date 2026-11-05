@@ -28,11 +28,10 @@ El objetivo del TP consiste en el desarrollo de una Inteligencia Artificial reba
 
 ## ⚙️ Conceptos de Algoritmos Aplicados
 Para cumplir con las restricciones de la cátedra de no utilizar bibliotecas externas a lo aprendido en clase, se implementaron de forma nativa las siguientes técnicas lógicas:
-* **Estructuras de Datos Dinámicas:** Listas enlazadas simples/dobles para la carga de datos catastróficos.
-* **Algoritmos de Ordenamiento y Búsqueda:** Búsqueda binaria para optimizar accesos y búsqueda directa.
+* **Estructuras de Datos Dinámicas:** Listas enlazadas simples para la carga de datos.
+* **Algoritmos de Ordenamiento y Búsqueda:** Búsqueda binaria y búsqueda directa.
 * **Procesamiento de Archivos:** Lectura y escritura secuencial de flujos de datos.
 * **Lógica Avanzada de Flujos:** Implementación de Apareo de archivos y algoritmos basados en Corte de Control.
-* **Modularización:** Sobrecarga de funciones para diversificar comportamientos según los tipos de datos procesados.
 
 ---
 
