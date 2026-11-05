@@ -28,8 +28,8 @@
 ### 2026/11/05
   - Desarrollo de programa de recopilacion de archivos:
       - Funciones agregadas:  
-        . LlenarconDatos para las 4 estructuras de datos
-        . Guardar en archivo para las 4 estructuras de datos
+        - LlenarconDatos para las 4 estructuras de datos
+        - Guardar en archivo para las 4 estructuras de datos
   - Inicio de desarrollo de programa de lectura de archivos binarios
   - Uso de funciones con sobrecarga
   - Implementacion de carpeta ("Archivos") para almacenar los archivos binarios
