@@ -66,10 +66,12 @@ void mostrarDatos(const char* nombreArchivo, Jockey info);
 int main(){
 
     Clima c;
+    MovSismicos s;
     Caballo cab;
     Jockey j;
     mostrarDatos("../Archivos/clima.dat", c);
     mostrarDatos("../Archivos/caballos.dat", cab);
+    mostrarDatos("../Archivos/sismos.dat", s);
     mostrarDatos("../Archivos/jockeys.dat", j);
     return 0;
 }
@@ -131,7 +133,7 @@ void leerArchivo(FILE* f, Jockey info) {
 void mostrarDatos(const char* nombreArchivo, Clima info) {
     FILE* f = fopen(nombreArchivo, "rb");
     if(f == NULL) {
-        cout << "El archivo todavia no existe o no hay datos cargados." << endl;
+        cout << "El archivo de clima todavia no existe o no hay datos cargados." << endl;
         return;
     }
     leerArchivo(f, info);
@@ -141,7 +143,7 @@ void mostrarDatos(const char* nombreArchivo, Clima info) {
 void mostrarDatos(const char* nombreArchivo, MovSismicos info) {
     FILE* f = fopen(nombreArchivo, "rb");
     if(f == NULL) {
-        cout << "El archivo todavia no existe o no hay datos cargados." << endl;
+        cout << "El archivo de movimientos sismicos todavia no existe o no hay datos cargados." << endl;
         return;
     }
     leerArchivo(f, info);
@@ -151,7 +153,7 @@ void mostrarDatos(const char* nombreArchivo, MovSismicos info) {
 void mostrarDatos(const char* nombreArchivo, Caballo info) {
     FILE* f = fopen(nombreArchivo, "rb");
     if(f == NULL) {
-        cout << "El archivo todavia no existe o no hay datos cargados." << endl;
+        cout << "El archivo de caballos todavia no existe o no hay datos cargados." << endl;
         return;
     }
     leerArchivo(f, info);
@@ -161,7 +163,7 @@ void mostrarDatos(const char* nombreArchivo, Caballo info) {
 void mostrarDatos(const char* nombreArchivo, Jockey info) {
     FILE* f = fopen(nombreArchivo, "rb");
     if(f == NULL) {
-        cout << "El archivo todavia no existe o no hay datos cargados." << endl;
+        cout << "El archivo de jockeys todavia no existe o no hay datos cargados." << endl;
         return;
     }
     leerArchivo(f, info);

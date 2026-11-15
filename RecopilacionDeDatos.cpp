@@ -48,7 +48,7 @@ struct NodoMovSismicos{
 };
 
 struct Caballo{
-    int idDato; // (unico)
+    int id; // (unico)
     char nombre[100+1];
     int idCaballo; // (unico)
     float velocidadMaxima; // (Km/h)
@@ -63,7 +63,7 @@ struct NodoCaballo{
 };
 
 struct Jockey{
-    int idDato;
+    int id;
     char nombreApellido[100+1];
     int DNI; // (unico)
     int edad;
@@ -91,7 +91,10 @@ void llenarConDatos(NodoClima*& lista);
 void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
 void llenarConDatos(NodoJockey*& lista);
-void buscarId(NodoClima*& lista);
+bool buscarId(NodoClima*& lista, int id);
+bool buscarId(NodoMovSismicos*& lista, int id);
+bool buscarId(NodoCaballo*& lista, int id);
+bool buscarId(NodoJockey*& lista, int id);
 
 
 
@@ -143,8 +146,7 @@ void mostrarMenu(){
 
             case 4:
                 llenarConDatos(listaJockeys);
-                // Todavia falta implementar el guardado
-                // de los jockeys y sus caballos asociados.
+                guardarEnArchivo(listaJockeys, "../Archivos/jockeys.dat");
                 break;
 
             case 0:
@@ -215,7 +217,7 @@ void guardarLista(FILE* f, NodoJockey*& lista) {
 }
 
 void guardarEnArchivo(NodoClima*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "wb");
+    FILE* f = fopen(nombreArchivo, "ab");
     if(f != NULL) {
         guardarLista(f, lista);
         fclose(f);
@@ -223,7 +225,7 @@ void guardarEnArchivo(NodoClima*& lista, const char* nombreArchivo) {
 }
 
 void guardarEnArchivo(NodoMovSismicos*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "wb");
+    FILE* f = fopen(nombreArchivo, "ab");
     if(f != NULL) {
         guardarLista(f, lista);
         fclose(f);
@@ -231,7 +233,7 @@ void guardarEnArchivo(NodoMovSismicos*& lista, const char* nombreArchivo) {
 }
 
 void guardarEnArchivo(NodoCaballo*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "wb");
+    FILE* f = fopen(nombreArchivo, "ab");
     if(f != NULL) {
         guardarLista(f, lista);
         fclose(f);
@@ -239,7 +241,7 @@ void guardarEnArchivo(NodoCaballo*& lista, const char* nombreArchivo) {
 }
 
 void guardarEnArchivo(NodoJockey*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "wb");
+    FILE* f = fopen(nombreArchivo, "ab");
     if(f != NULL) {
         guardarLista(f, lista);
         fclose(f);
@@ -250,8 +252,20 @@ void llenarConDatos(NodoClima*& lista){
     bool continuar=true;
     while(continuar){
         Clima nuevo;
-        cout << "Ingrese el ID del clima: ";
-        cin >> nuevo.id;
+        bool error = false;
+        do{
+            error = false;
+            cout << " Ingrese el ID del clima (Ingrese 0 para salir): ";
+            cin >> nuevo.id;
+            if(nuevo.id<1){
+                return;
+            }
+            if(buscarId(lista, nuevo.id)){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);
         cout << "Ingrese el dia del clima: ";
         cin >> nuevo.fecha.dia;
         cout << "Ingrese el mes del clima: ";
@@ -282,8 +296,20 @@ void llenarConDatos(NodoMovSismicos*& lista){
     bool continuar=true;
     while(continuar){
         MovSismicos nuevo;
-        cout << "Ingrese el ID del movimiento sismico: ";
-        cin >> nuevo.id;
+        bool error = false;
+        do{
+            error = false;
+            cout << " Ingrese el ID del movimiento sismico (Ingrese 0 para salir): ";
+            cin >> nuevo.id;
+            if(nuevo.id<1){
+                return;
+            }
+            if(buscarId(lista, nuevo.id)){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);
         cout << "Ingrese el dia de la fecha: ";
         cin >> nuevo.fechaReg.dia;
         cout << "Ingrese el mes de la fecha: ";
@@ -314,8 +340,20 @@ void llenarConDatos(NodoCaballo*& lista){
     bool continuar=true;
     while(continuar){
         Caballo nuevo;
-        cout << "Ingrese el ID del dato del caballo: ";
-        cin >> nuevo.idDato;
+        bool error = false;
+        do{
+            error = false;
+            cout << " Ingrese el ID del caballo (Ingrese 0 para salir): ";
+            cin >> nuevo.id;
+            if(nuevo.id<1){
+                return;
+            }
+            if(buscarId(lista, nuevo.id)){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);
         cout << "Ingrese el nombre del caballo: ";
         cin.ignore();
         cin.getline(nuevo.nombre, 100);
@@ -354,8 +392,20 @@ void llenarConDatos(NodoJockey*& lista){
     bool continuar=true;
     while(continuar){
         Jockey nuevo;
-        cout << "Ingrese el ID del dato del jockey: ";
-        cin >> nuevo.idDato;
+        bool error = false;
+        do{
+            error = false;
+            cout << " Ingrese el ID del jockey (Ingrese 0 para salir): ";
+            cin >> nuevo.id;
+            if(nuevo.id<1){
+                return;
+            }
+            if(buscarId(lista, nuevo.id)){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);
         cout << "Ingrese el nombre y apellido del jockey: ";
         cin.ignore();
         cin.getline(nuevo.nombreApellido, 100);
@@ -373,4 +423,93 @@ void llenarConDatos(NodoJockey*& lista){
         cout << "Desea ingresar otro dato? (1 para si, 0 para no): ";
         cin >> continuar;
     }
+}
+
+bool buscarId(NodoClima*& lista, int id){
+    NodoClima* aux = lista;
+    while(aux!=NULL){
+        if(aux->info.id==id){
+            return true;
+        }
+        aux=aux->sgte;
+    }
+    Clima datos;
+    FILE * f = fopen("../Archivos/clima.dat", "rb");
+    if(f == NULL){
+        return false;
+    }
+    while(fread(&datos, sizeof(Clima), 1, f) == 1) {
+        if(datos.id == id){
+            fclose(f);
+            return true;
+        }
+    }
+    fclose(f);
+    return false;
+}
+bool buscarId(NodoMovSismicos*& lista, int id){
+    NodoMovSismicos* aux = lista;
+    while(aux!=NULL){
+        if(aux->info.id==id){
+            return true;
+        }
+        aux=aux->sgte;
+    }
+    MovSismicos datos;
+    FILE * f = fopen("../Archivos/sismos.dat", "rb");
+    if(f == NULL){
+        return false;
+    }
+    while(fread(&datos, sizeof(MovSismicos), 1, f) == 1) {
+        if(datos.id == id){
+            fclose(f);
+            return true;
+        }
+    }
+    fclose(f);
+    return false;
+}
+bool buscarId(NodoCaballo*& lista, int id){
+    NodoCaballo* aux = lista;
+    while(aux!=NULL){
+        if(aux->info.id==id){
+            return true;
+        }
+        aux=aux->sgte;
+    }
+    Caballo datos;
+    FILE * f = fopen("../Archivos/caballos.dat", "rb");
+    if(f == NULL){
+        return false;
+    }
+    while(fread(&datos, sizeof(Caballo), 1, f) == 1) {
+        if(datos.id == id){
+            fclose(f);
+            return true;
+        }
+    }
+    fclose(f);
+    return false;
+}
+bool buscarId(NodoJockey*& lista, int id){
+    NodoJockey* aux = lista;
+    while(aux!=NULL){
+        if(aux->info.id==id){
+            return true;
+        }
+        aux=aux->sgte;
+    }
+    Jockey datos;
+    FILE * f = fopen("../Archivos/jockeys.dat", "rb");
+    if(f == NULL){
+        return false;
+    }
+    while(fread(&datos, sizeof(Jockey), 1, f) == 1) {
+        if(datos.id == id){
+            fclose(f);
+            return true;
+        }
+    }
+    fclose(f);
+    return false;
 }
