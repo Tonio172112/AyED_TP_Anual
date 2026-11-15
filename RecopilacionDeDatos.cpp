@@ -151,7 +151,8 @@ void mostrarMenu(){
 
             case 4:
                 llenarConDatos(listaJockeys);
-                guardarEnArchivo(listaJockeys, "../Archivos/jockeys.dat");
+                // Todavia falta implementar el guardado
+                // de los jockeys y sus caballos asociados.
                 break;
 
             case 0:
