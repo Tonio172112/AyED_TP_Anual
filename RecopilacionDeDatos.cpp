@@ -75,6 +75,14 @@ struct NodoJockey{
     NodoJockey* sgte;
 };
 
+struct JockeyArchivo { //estructura auxiliarpara guardar en archivo
+    int idDato;
+    char nombreApellido[101];
+    int DNI;
+    int edad;
+    int cantCaballos;
+};
+
 void guardarDato(FILE* f, Clima info);
 void guardarDato(FILE* f, MovSismicos info);
 void guardarDato(FILE* f, Caballo info);
@@ -115,7 +123,7 @@ void mostrarMenu(){
     int opcion;
 
     do {
-        cout << "\n===== MENU DE RECOPILACION =====" << endl;
+        cout << "\n==-== MENU DE RECOPILACION ==-==" << endl;
         cout << "1. Ingresar datos del clima" << endl;
         cout << "2. Ingresar movimientos sismicos" << endl;
         cout << "3. Ingresar datos de caballos" << endl;
