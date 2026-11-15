@@ -92,14 +92,59 @@ void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
 void llenarConDatos(NodoJockey*& lista);
 
+
 int main(){
 
     NodoClima* listaClima = NULL;
-    
-    llenarConDatos(listaClima);
-    
-    guardarEnArchivo(listaClima, "../Archivos/clima.dat");
-    
+    NodoMovSismicos* listaSismos = NULL;
+    NodoCaballo* listaCaballos = NULL;
+    NodoJockey* listaJockeys = NULL;
+
+    int opcion;
+
+    do {
+        cout << "\n===== MENU DE RECOPILACION =====" << endl;
+        cout << "1. Ingresar datos del clima" << endl;
+        cout << "2. Ingresar movimientos sismicos" << endl;
+        cout << "3. Ingresar datos de caballos" << endl;
+        cout << "4. Ingresar datos de jockeys" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Seleccione una opcion (0 para salir): ";
+        cin >> opcion;
+
+        switch(opcion){
+
+            case 1:
+                llenarConDatos(listaClima);
+                guardarEnArchivo(listaClima, "../Archivos/clima.dat");
+                break;
+
+            case 2:
+                llenarConDatos(listaSismos);
+                guardarEnArchivo(listaSismos, "../Archivos/sismos.dat");
+                break;
+
+            case 3:
+                llenarConDatos(listaCaballos);
+                guardarEnArchivo(listaCaballos, "../Archivos/caballos.dat");
+                break;
+
+            case 4:
+                llenarConDatos(listaJockeys);
+                // Todavia falta implementar el guardado
+                // de los jockeys y sus caballos asociados.
+                break;
+
+            case 0:
+                cout << "Finalizando programa..." << endl;
+                break;
+
+            default:
+                cout << "Opcion incorrecta." << endl;
+        }
+
+    } while(opcion != 0);
+
     return 0;
 }
 
