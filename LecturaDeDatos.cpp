@@ -67,9 +67,10 @@ int main(){
 
     Clima c;
     Caballo cab;
+    Jockey j;
     mostrarDatos("../Archivos/clima.dat", c);
     mostrarDatos("../Archivos/caballos.dat", cab);
-    
+    mostrarDatos("../Archivos/jockeys.dat", j);
     return 0;
 }
 

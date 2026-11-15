@@ -91,15 +91,27 @@ void llenarConDatos(NodoClima*& lista);
 void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
 void llenarConDatos(NodoJockey*& lista);
+void buscarId(NodoClima*& lista);
+
+
+
+
+
+void mostrarMenu();
 
 
 int main(){
 
+    mostrarMenu();
+
+    return 0;
+}
+
+void mostrarMenu(){
     NodoClima* listaClima = NULL;
     NodoMovSismicos* listaSismos = NULL;
     NodoCaballo* listaCaballos = NULL;
     NodoJockey* listaJockeys = NULL;
-
     int opcion;
 
     do {
@@ -131,8 +143,7 @@ int main(){
 
             case 4:
                 llenarConDatos(listaJockeys);
-                // Todavia falta implementar el guardado
-                // de los jockeys y sus caballos asociados.
+                guardarEnArchivo(listaJockeys, "../Archivos/jockeys.dat");
                 break;
 
             case 0:
@@ -144,8 +155,6 @@ int main(){
         }
 
     } while(opcion != 0);
-
-    return 0;
 }
 
 
@@ -165,7 +174,10 @@ void guardarDato(FILE* f, Caballo info) {
 }
 // Sobrecarga
 void guardarDato(FILE* f, Jockey info) {
-    fwrite(&info, sizeof(Jockey), 1, f);
+    NodoCaballo* aux = info.listaCaballos;
+    Jockey infoAux = info;
+    infoAux.listaCaballos = NULL;
+    fwrite(&infoAux, sizeof(Jockey), 1, f);
 }
 
 // Guarda la lista
