@@ -139,8 +139,7 @@ int main(){
 
             case 4:
                 llenarConDatos(listaJockeys);
-                // Todavia falta implementar el guardado
-                // de los jockeys y sus caballos asociados.
+                guardarEnArchivo(listaJockeys, "../Archivos/jockeys.dat");
                 break;
 
             case 0:
