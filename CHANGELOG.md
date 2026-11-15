@@ -34,3 +34,14 @@
   - Uso de funciones con sobrecarga
   - Implementacion de carpeta ("Archivos") para almacenar los archivos binarios
   - Idea de implementar un archivo de texto plano config.txt para almacenar las rutas de los a archivos binarios para que si se cambia la ruta o el nombre del archivo no haya necesidad de modificar el código en ninguno de los dos programas 
+
+### 2026/11/15
+  - Desarrollo de programa de recopilacion de archivos:
+      - Funciones agregadas:  
+        - MostrarMenu
+        - BuscarId (se encarga de que no haya repeticiones en diferentes cargas)
+  - Se cambio el modo de escritura de los archivos de forma de escritura binaria (wb) a append (ab)
+    para lograr la persistencia de los datos a lo largo de las ejecuciones realizadas.
+  - Uso de funciones con sobrecarga.
+  - Queda pendiente implementar caballos por id a cada jockey correspondiente
+    - Verificar que exista el caballo y agregar al jockey 
