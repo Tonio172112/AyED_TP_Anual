@@ -95,12 +95,6 @@ bool buscarId(NodoClima*& lista, int id);
 bool buscarId(NodoMovSismicos*& lista, int id);
 bool buscarId(NodoCaballo*& lista, int id);
 bool buscarId(NodoJockey*& lista, int id);
-Caballo buscarCaballoPorID(NodoCaballo *& lista, int id);
-
-
-
-
-
 void mostrarMenu();
 
 
