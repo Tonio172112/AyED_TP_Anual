@@ -21,37 +21,44 @@ struct FechaHora{
 };
 
 struct Clima{
-    int id; // (unico)
-    Fecha fecha; // (unico)
+    int id;
+    Fecha fecha;
     int temperaturas[3];
     char descripcion[256+1];
     int mmAguaCaida;
 };
 
 struct MovSismicos{
-    int id; // (unico)
+    int id;
     Fecha fechaReg;
-    char paisReg [56+1];
+    char paisReg[56+1];
     double latitud;
     double longitud;
     float magnitud;
 };
 
 struct Caballo{
-    int idDato; // (unico)
+    int id; 
+    int idJockey; 
     char nombre[100+1];
-    int idCaballo; // (unico)
-    float velocidadMaxima; // (Km/h)
+    int idCaballo; 
+    float velocidadMaxima; 
     float peso;
     float tamanoHerradura;
     FechaHora ultimaCarrera;
 };
 
+struct NodoCaballo{
+    Caballo info;
+    NodoCaballo* sgte;
+};
+
 struct Jockey{
-    int idDato;
+    int id;
     char nombreApellido[100+1];
-    int DNI; // (unico)
+    int DNI; 
     int edad;
+    NodoCaballo* listaCaballos;
 };
 
 void leerArchivo(FILE* f, Clima info);
@@ -61,18 +68,18 @@ void leerArchivo(FILE* f, Jockey info);
 void mostrarDatos(const char* nombreArchivo, Clima info);
 void mostrarDatos(const char* nombreArchivo, MovSismicos info);
 void mostrarDatos(const char* nombreArchivo, Caballo info);
-void mostrarDatos(const char* nombreArchivo, Jockey info);
+void mostrarJockeysConCaballos(const char* archivoJockeys, const char* archivoCaballos);
 
 int main(){
-
+    cout << "=== LECTURA DE ARCHIVOS ===" << endl;
     Clima c;
     MovSismicos s;
     Caballo cab;
-    Jockey j;
+    
     mostrarDatos("../Archivos/clima.dat", c);
-    mostrarDatos("../Archivos/caballos.dat", cab);
     mostrarDatos("../Archivos/sismos.dat", s);
-    mostrarDatos("../Archivos/jockeys.dat", j);
+    mostrarDatos("../Archivos/caballos.dat", cab);
+    mostrarJockeysConCaballos("../Archivos/jockeys.dat", "../Archivos/caballos.dat");
     return 0;
 }
 
@@ -105,11 +112,11 @@ void leerArchivo(FILE* f, MovSismicos info) {
 
 // Sobrecarga 
 void leerArchivo(FILE* f, Caballo info) {
-    cout << "\n--- Caballos ---\n";
+    cout << "\n--- Caballos (General) ---\n";
     while(fread(&info, sizeof(Caballo), 1, f) == 1) {
-        cout << "ID Dato Caballo: " << info.idDato << endl;
+        cout << "ID Caballo: " << info.id << " | ID Jockey Vinculado: " << info.idJockey << endl;
         cout << "Nombre: " << info.nombre << endl;
-        cout << "ID Caballo: " << info.idCaballo << endl;
+        cout << "ID Matricula Caballo: " << info.idCaballo << endl;
         cout << "Velocidad Maxima: " << info.velocidadMaxima << " Km/h" << endl;
         cout << "Peso: " << info.peso << endl;
         cout << "Tamano herradura: " << info.tamanoHerradura << endl;
@@ -118,54 +125,62 @@ void leerArchivo(FILE* f, Caballo info) {
     }
 }
 
-// Sobrecarga
-void leerArchivo(FILE* f, Jockey info) {
-    cout << "\n--- Jockeys ---\n";
-    while(fread(&info, sizeof(Jockey), 1, f) == 1) {
-        cout << "ID Dato Jockey: " << info.idDato << endl;
-        cout << "Nombre y Apellido: " << info.nombreApellido << endl;
-        cout << "DNI: " << info.DNI << endl;
-        cout << "Edad: " << info.edad << endl;
+
+void mostrarJockeysConCaballos(const char* archivoJockeys, const char* archivoCaballos) {
+    FILE* fJ = fopen(archivoJockeys, "rb");
+    if(fJ == NULL) {
+        cout << "El archivo de jockeys todavia no existe o no hay datos cargados." << endl;
+        return;
+    }
+
+    Jockey j;
+    cout << "\n--- JOCKEYS Y SUS CABALLOS ASIGNADOS ---" << endl;
+    while(fread(&j, sizeof(Jockey), 1, fJ) == 1) {
+        cout << "ID Jockey: " << j.id << endl;
+        cout << "Nombre y Apellido: " << j.nombreApellido << endl;
+        cout << "DNI: " << j.DNI << endl;
+        cout << "Edad: " << j.edad << endl;
+        cout << " Caballos asignados:" << endl;
+
+        // Abrimos el archivo de caballos para buscar los que pertenecen a este jockey
+        FILE* fC = fopen(archivoCaballos, "rb");
+        bool tieneCaballos = false;
+        if(fC != NULL) {
+            Caballo c;
+            while(fread(&c, sizeof(Caballo), 1, fC) == 1) {
+                if(c.idJockey == j.id) {
+                    tieneCaballos = true;
+                    cout << "   - ID Caballo: " << c.id << " | Nombre: " << c.nombre 
+                         << " (Vel. Max: " << c.velocidadMaxima << " Km/h)" << endl;
+                }
+            }
+            fclose(fC);
+        }
+        if(!tieneCaballos) {
+            cout << "   (Sin caballos asignados)" << endl;
+        }
         cout << "-----------------------------------" << endl;
     }
+    fclose(fJ);
 }
 
 void mostrarDatos(const char* nombreArchivo, Clima info) {
     FILE* f = fopen(nombreArchivo, "rb");
-    if(f == NULL) {
-        cout << "El archivo de clima todavia no existe o no hay datos cargados." << endl;
-        return;
-    }
+    if(f == NULL) { cout << "Archivo no encontrado: " << nombreArchivo << endl; return; }
     leerArchivo(f, info);
     fclose(f);
 }
 
 void mostrarDatos(const char* nombreArchivo, MovSismicos info) {
     FILE* f = fopen(nombreArchivo, "rb");
-    if(f == NULL) {
-        cout << "El archivo de movimientos sismicos todavia no existe o no hay datos cargados." << endl;
-        return;
-    }
+    if(f == NULL) { cout << "Archivo no encontrado: " << nombreArchivo << endl; return; }
     leerArchivo(f, info);
     fclose(f);
 }
 
 void mostrarDatos(const char* nombreArchivo, Caballo info) {
     FILE* f = fopen(nombreArchivo, "rb");
-    if(f == NULL) {
-        cout << "El archivo de caballos todavia no existe o no hay datos cargados." << endl;
-        return;
-    }
-    leerArchivo(f, info);
-    fclose(f);
-}
-
-void mostrarDatos(const char* nombreArchivo, Jockey info) {
-    FILE* f = fopen(nombreArchivo, "rb");
-    if(f == NULL) {
-        cout << "El archivo de jockeys todavia no existe o no hay datos cargados." << endl;
-        return;
-    }
+    if(f == NULL) { cout << "Archivo no encontrado: " << nombreArchivo << endl; return; }
     leerArchivo(f, info);
     fclose(f);
 }
