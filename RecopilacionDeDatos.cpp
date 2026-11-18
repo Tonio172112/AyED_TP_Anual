@@ -90,11 +90,12 @@ void guardarEnArchivo(NodoJockey*& lista, const char* nombreArchivo);
 void llenarConDatos(NodoClima*& lista);
 void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
-void llenarConDatos(NodoJockey*& lista);
+void llenarConDatos(NodoJockey*& lista, NodoCaballo*& listaCaballos);
 bool buscarId(NodoClima*& lista, int id);
 bool buscarId(NodoMovSismicos*& lista, int id);
 bool buscarId(NodoCaballo*& lista, int id);
 bool buscarId(NodoJockey*& lista, int id);
+Caballo buscarCaballoPorID(NodoCaballo *& lista, int id);
 
 
 
@@ -145,7 +146,7 @@ void mostrarMenu(){
                 break;
 
             case 4:
-                llenarConDatos(listaJockeys);
+                llenarConDatos(listaJockeys, listaCaballos);
                 guardarEnArchivo(listaJockeys, "../Archivos/jockeys.dat");
                 break;
 
@@ -241,11 +242,16 @@ void guardarEnArchivo(NodoCaballo*& lista, const char* nombreArchivo) {
 }
 
 void guardarEnArchivo(NodoJockey*& lista, const char* nombreArchivo) {
+    NodoJockey* aux = lista;
+    aux->info.listaCaballos = NULL; 
+    
     FILE* f = fopen(nombreArchivo, "ab");
     if(f != NULL) {
-        guardarLista(f, lista);
+        guardarLista(f, aux);
+
         fclose(f);
     }
+    guardarEnArchivo(aux->info.listaCaballos, "../Archivos/jockey.dat");
 }
 
 void llenarConDatos(NodoClima*& lista){
@@ -388,8 +394,9 @@ void llenarConDatos(NodoCaballo*& lista){
     }
 }
 
-void llenarConDatos(NodoJockey*& lista){
+void llenarConDatos(NodoJockey*& lista, NodoCaballo*& listaCaballos){
     bool continuar=true;
+    int idCaballo;
     while(continuar){
         Jockey nuevo;
         bool error = false;
@@ -413,7 +420,23 @@ void llenarConDatos(NodoJockey*& lista){
         cin >> nuevo.DNI;
         cout << "Ingrese la edad del jockey: ";
         cin >> nuevo.edad;
-        nuevo.listaCaballos = NULL;
+        cout << "Ingrese el ID del caballo que monta: ";
+        cin >>idCaballo;
+        
+        Caballo caballoAsignado = buscarCaballoPorID(listaCaballos, idCaballo);
+
+        if(caballoAsignado.id != 0){
+            NodoCaballo* nuevoNodoCaballo = new NodoCaballo;
+            nuevoNodoCaballo->info = caballoAsignado;
+
+            nuevoNodoCaballo->sgte = nuevo.listaCaballos;
+            nuevo.listaCaballos = nuevoNodoCaballo;
+        } else {
+            cout << "No se encontró un caballo con el ID ingresado" << endl;
+
+        }
+
+
 
         NodoJockey* nuevoNodo = new NodoJockey;
         nuevoNodo->info = nuevo;
@@ -424,6 +447,21 @@ void llenarConDatos(NodoJockey*& lista){
         cin >> continuar;
     }
 }
+
+
+Caballo buscarCaballoPorID(NodoCaballo *& lista, int id){
+    NodoCaballo* aux = lista;
+    while(aux!=NULL){
+        if(buscarId(lista, id)){
+            return aux->info;
+        }
+        aux=aux->sgte;
+    }
+    Caballo vacio= {0, "", 0, 0.0, 0.0, 0.0, { {0, 0, 0}, {0, 0, 0} } };
+    return vacio; 
+}
+
+
 
 bool buscarId(NodoClima*& lista, int id){
     NodoClima* aux = lista;

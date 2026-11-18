@@ -52,6 +52,7 @@ struct Jockey{
     char nombreApellido[100+1];
     int DNI; // (unico)
     int edad;
+    
 };
 
 void leerArchivo(FILE* f, Clima info);
