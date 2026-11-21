@@ -4,54 +4,59 @@
 
 
 ### [ ❌ por realizar, 🧑‍💻 en progreso, ✅ finalizado ]
-### Código de programa de recopilación de archivos 🧑‍💻 
-### Código de programa de consulta de archivos ❌
+### Código de programa de recopilación de archivos ✅ 
+### Código de programa de consulta de archivos ✅
 ### Conceptos utilizados: 
-  - Listas ✅
-  - Búsqueda binaria ✅
-  - Apareo ✅
-  - Estructuras de datos ✅
-  - Sobrecarga de funciones ✅
-  - Archivos (tanto lectura como escritura) ✅
-  - Búsqueda directa ❌
-  - Corte de control ✅
+- Listas ✅
+- Búsqueda binaria ✅
+- Apareo ✅
+- Estructuras de datos ✅
+- Sobrecarga de funciones ✅
+- Archivos (tanto lectura como escritura) ✅
+- Búsqueda directa ✅
+- Corte de control ✅
 
 
 ## Diario de desarrollo:
 
 ### 2026/11/03
-  - Creación de repositorio compartido en GitHub
-  - Inicio de desarrollo de programa de recopilación de archivos
-  - Comienzo de documentación en un docx
-  - Utilización de Listas y Estructuras de datos
+- Creación de repositorio compartido en GitHub
+- Inicio de desarrollo de programa de recopilación de archivos
+- Comienzo de documentación en un docx
+- Utilización de Listas y Estructuras de datos
 
 ### 2026/11/05
-  - Desarrollo de programa de recopilacion de archivos:
-      - Funciones agregadas:  
-        - LlenarconDatos para las 4 estructuras de datos
-        - Guardar en archivo para las 4 estructuras de datos
-  - Inicio de desarrollo de programa de lectura de archivos binarios
-  - Uso de funciones con sobrecarga
-  - Implementacion de carpeta ("Archivos") para almacenar los archivos binarios
-  - Idea de implementar un archivo de texto plano config.txt para almacenar las rutas de los a archivos binarios para que si se cambia la ruta o el nombre del archivo no haya necesidad de modificar el código en ninguno de los dos programas 
+- Desarrollo de programa de recopilacion de archivos:
+  - Funciones agregadas:  
+    - LlenarconDatos para las 4 estructuras de datos
+    - Guardar en archivo para las 4 estructuras de datos
+- Inicio de desarrollo de programa de lectura de archivos binarios
+- Uso de funciones con sobrecarga
+- Implementacion de carpeta ("Archivos") para almacenar los archivos binarios
+- Idea de implementar un archivo de texto plano config.txt para almacenar las rutas de los a archivos binarios para que si se cambia la ruta o el nombre del archivo no haya necesidad de modificar el código en ninguno de los dos programas 
 
 ### 2026/11/15
-  - Desarrollo de programa de recopilacion de archivos:
-      - Funciones agregadas:  
-        - MostrarMenu
-        - BuscarId (se encarga de que no haya repeticiones en diferentes cargas)
-  - Se cambio el modo de escritura de los archivos de forma de escritura binaria (wb) a append (ab)
+- Desarrollo de programa de recopilacion de archivos:
+  - Funciones agregadas:  
+    - MostrarMenu
+    - BuscarId (se encarga de que no haya repeticiones en diferentes cargas)
+- Se cambio el modo de escritura de los archivos de forma de escritura binaria (wb) a append (ab)
     para lograr la persistencia de los datos a lo largo de las ejecuciones realizadas.
-  - Uso de funciones con sobrecarga.
-  - Queda pendiente implementar caballos por id a cada jockey correspondiente
-    - Verificar que exista el caballo y agregar al jockey 
+- Uso de funciones con sobrecarga.
+- Queda pendiente implementar caballos por id a cada jockey correspondiente
+  - Verificar que exista el caballo y agregar al jockey 
 
 
 ### 2026/11/21
-  - Programa de recopilacion de archivos finalizado
-        - Funciones agregadas:  
-          - Buscar por DNI y buscar por identificador de caballo
-          - Apareo de datos implementado a la hora de ordenar los datos de los archivos
-  - Programa de consulta de datos en desarrollo:
-    - busqueda binaria y corte de control implementados
-    - proximo a agregar: busqueda directa con el DNI el jockey
+- Programa de recopilacion de archivos finalizado
+  - Funciones agregadas:  
+    - Buscar por DNI y buscar por identificador de caballo
+    - Apareo de datos implementado a la hora de ordenar los datos de los archivos
+    - Asignación de caballos existentes a jockeys
+    - ID de jockey autoincremental para garantizar posicion unica y predecible 
+
+- Programa de consulta de datos finalizado
+  - Búsqueda binaria (Clima, Sismos y Caballos) y corte de control implementados
+  - Categorización y ordenamiento de caballos por velocidad máxima
+  - Consultas cruzadas implementadas: velocidades de caballos en días catastróficos y guardadas en un archivo binario, caballos que hayan corrido el mismo dia que un sismo haya ocurrido, y jockeys con sus caballos y velocidad máxima promedio de su equipo (consulta cruzada solicitada en el punto 6)
+  - Consultas de jockeys agregadas: búsqueda directa por ID secuencial buscarDirectaJockey, búsqueda por DNI y listado de mayores/menores de 21 años con promedio general de edad
