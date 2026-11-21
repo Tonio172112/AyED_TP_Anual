@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cstring>
 // Programa para lectura de archivos
 using namespace std;
 
@@ -48,6 +49,17 @@ struct NodoMovSismicos{
     NodoMovSismicos* sgte;
 };
 
+struct ResumenPaisSismo{
+    char pais[56+1];
+    int cantidad;
+    double sumaMagnitud;
+};
+
+struct NodoResumenSismo{
+    ResumenPaisSismo info;
+    NodoResumenSismo* sgte;
+};
+
 struct Caballo{
     int id; // (unico)
     int idJockey; // Clave foranea para vincular al jockey en el archivo
@@ -91,6 +103,15 @@ void liberarListaClima(NodoClima*& lista);
 bool esDiaCatastrofico(Clima c);
 bool contieneGranizo(const char desc[]);
 void listarDiasCat(const char* nombreArchivo);
+void aMinuscula(char destino[], const char origen[]);
+int compararTextoMinuscula(const char a[], const char b[]);
+void insertarSismo(NodoMovSismicos*& lista, MovSismicos nuevo);
+void ordenarSismosPorPais(NodoMovSismicos*& lista);
+void liberarListaSismos(NodoMovSismicos*& lista);
+void insertarResumenPais(NodoResumenSismo*& lista, ResumenPaisSismo dato);
+void ordenarResumenPorCantidad(NodoResumenSismo*& lista);
+void liberarResumenSismos(NodoResumenSismo*& lista);
+void top3YPromedioSismos(const char* nombreArchivo);
 void menuClima();
 void menuSismos();
 void menuCaballos();
@@ -184,6 +205,7 @@ void menuSismos(){
     do {
         cout << "\n--- MENU MOVIMIENTOS SISMICOS ---" << endl;
         cout << "1. Buscar por ID" << endl;
+        cout << "2. Top 3 paises con mas sismos y promedio de magnitud" << endl;
         cout << "0. Volver al menu principal" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
@@ -194,6 +216,10 @@ void menuSismos(){
                 cout << "Ingrese el ID sismico a buscar: ";
                 cin >> idBuscado;
                 buscarBinariaSismo("../Archivos/sismos.dat", idBuscado);
+                break;
+            }
+            case 2: {
+                top3YPromedioSismos("../Archivos/sismos.dat");
                 break;
             }
             case 0:
@@ -491,20 +517,11 @@ void buscarBinariaJockey(const char* nombreArchivo, const char* archivoCaballos,
     }
 }
 
-// Verifica si la descripcion contiene "granizo" sin usar string
+// Verifica si la descripcion del clima contiene "granizo" 
 bool contieneGranizo(const char desc[]){
-    const char clave[] = "granizo";
-    for(int i = 0; desc[i] != '\0'; i++){
-        int j = 0;
-        while(clave[j] != '\0' && desc[i + j] != '\0'){
-            char a = desc[i + j];
-            if(a >= 'A' && a <= 'Z') a = a + ('a' - 'A');
-            if(a != clave[j]) break;
-            j++;
-        }
-        if(clave[j] == '\0') return true;
-    }
-    return false;
+    char descMin[257];
+    aMinuscula(descMin, desc);
+    return strstr(descMin, "granizo") != NULL;
 }
 
 bool esDiaCatastrofico(Clima c){
@@ -576,4 +593,162 @@ void listarDiasCat(const char* nombreArchivo){
     cout << "Promedio de temperatura en dias catastroficos: " << promedio << " C" << endl;
 
     liberarListaClima(listaCat);
+}
+
+void aMinuscula(char destino[], const char origen[]){
+    strcpy(destino, origen);
+    for(int i = 0; destino[i] != '\0'; i++){
+        if(destino[i] >= 'A' && destino[i] <= 'Z'){
+            destino[i] = destino[i] + ('a' - 'A');
+        }
+    }
+}
+
+int compararTextoMinuscula(const char a[], const char b[]){
+    char minA[57];
+    char minB[57];
+    aMinuscula(minA, a);
+    aMinuscula(minB, b);
+    return strcmp(minA, minB);
+}
+
+void insertarSismo(NodoMovSismicos*& lista, MovSismicos nuevo){
+    NodoMovSismicos* nodo = new NodoMovSismicos;
+    nodo->info = nuevo;
+    nodo->sgte = lista;
+    lista = nodo;
+}
+
+void ordenarSismosPorPais(NodoMovSismicos*& lista){
+    if(lista == NULL) return;
+    bool huboCambio;
+    do{
+        huboCambio = false;
+        NodoMovSismicos* actual = lista;
+        while(actual->sgte != NULL){
+            if(compararTextoMinuscula(actual->info.paisReg, actual->sgte->info.paisReg) > 0){
+                MovSismicos temp = actual->info;
+                actual->info = actual->sgte->info;
+                actual->sgte->info = temp;
+                huboCambio = true;
+            }
+            actual = actual->sgte;
+        }
+    } while(huboCambio);
+}
+
+void liberarListaSismos(NodoMovSismicos*& lista){
+    while(lista != NULL){
+        NodoMovSismicos* aux = lista;
+        lista = lista->sgte;
+        delete aux;
+    }
+}
+
+void insertarResumenPais(NodoResumenSismo*& lista, ResumenPaisSismo dato){
+    NodoResumenSismo* nodo = new NodoResumenSismo;
+    nodo->info = dato;
+    nodo->sgte = lista;
+    lista = nodo;
+}
+
+void ordenarResumenPorCantidad(NodoResumenSismo*& lista){
+    if(lista == NULL) return;
+    bool huboCambio;
+    do{
+        huboCambio = false;
+        NodoResumenSismo* actual = lista;
+        while(actual->sgte != NULL){
+            if(actual->info.cantidad < actual->sgte->info.cantidad){
+                ResumenPaisSismo temp = actual->info;
+                actual->info = actual->sgte->info;
+                actual->sgte->info = temp;
+                huboCambio = true;
+            }
+            actual = actual->sgte;
+        }
+    } while(huboCambio);
+}
+
+void liberarResumenSismos(NodoResumenSismo*& lista){
+    while(lista != NULL){
+        NodoResumenSismo* aux = lista;
+        lista = lista->sgte;
+        delete aux;
+    }
+}
+
+void top3YPromedioSismos(const char* nombreArchivo){
+    FILE* f = fopen(nombreArchivo, "rb");
+    if(f == NULL){
+        cout << "Archivo no encontrado: " << nombreArchivo << endl;
+        return;
+    }
+
+    NodoMovSismicos* listaSismos = NULL;
+    MovSismicos reg;
+    while(fread(&reg, sizeof(MovSismicos), 1, f) == 1){
+        insertarSismo(listaSismos, reg);
+    }
+    fclose(f);
+
+    if(listaSismos == NULL){
+        cout << "\nNo hay registros de movimientos sismicos." << endl;
+        return;
+    }
+
+    ordenarSismosPorPais(listaSismos);
+
+    NodoResumenSismo* listaResumen = NULL;
+    NodoMovSismicos* aux = listaSismos;
+
+    cout << "\n=== PROMEDIO DE MAGNITUDES POR PAIS ===" << endl;
+    // Corte de control implementado 
+    while(aux != NULL){
+        char paisActual[56+1];
+        strcpy(paisActual, aux->info.paisReg);
+        int cantPais = 0;
+        double sumaMag = 0.0;
+
+        while(aux != NULL && compararTextoMinuscula(aux->info.paisReg, paisActual) == 0){
+            cantPais++;
+            sumaMag += aux->info.magnitud;
+            aux = aux->sgte;
+        }
+
+        double prom = 0.0;
+        if(cantPais > 0){
+            prom = sumaMag / cantPais;
+        }
+
+        cout << "Pais: " << paisActual
+             << " | Sismos: " << cantPais
+             << " | Promedio magnitud: " << prom << endl;
+
+        ResumenPaisSismo res;
+        strcpy(res.pais, paisActual);
+        res.cantidad = cantPais;
+        res.sumaMagnitud = sumaMag;
+        insertarResumenPais(listaResumen, res);
+    }
+
+    ordenarResumenPorCantidad(listaResumen);
+
+    cout << "\n=== TOP 3 LUGARES CON MAS MOVIMIENTOS SISMICOS ===" << endl;
+    int pos = 1;
+    NodoResumenSismo* auxRes = listaResumen;
+    while(auxRes != NULL && pos <= 3){
+        double prom = 0.0;
+        if(auxRes->info.cantidad > 0){
+            prom = auxRes->info.sumaMagnitud / auxRes->info.cantidad;
+        }
+        cout << pos << ". " << auxRes->info.pais
+             << " - " << auxRes->info.cantidad << " movimientos"
+             << " (Promedio magnitud: " << prom << ")" << endl;
+        auxRes = auxRes->sgte;
+        pos++;
+    }
+
+    liberarListaSismos(listaSismos);
+    liberarResumenSismos(listaResumen);
 }

@@ -8,13 +8,13 @@
 ### Código de programa de consulta de archivos ❌
 ### Conceptos utilizados: 
   - Listas ✅
-  - Búsqueda binaria ❌
-  - Apareo ❌
+  - Búsqueda binaria ✅
+  - Apareo ✅
   - Estructuras de datos ✅
   - Sobrecarga de funciones ✅
   - Archivos (tanto lectura como escritura) ✅
   - Búsqueda directa ❌
-  - Corte de control ❌
+  - Corte de control ✅
 
 
 ## Diario de desarrollo:
@@ -45,3 +45,13 @@
   - Uso de funciones con sobrecarga.
   - Queda pendiente implementar caballos por id a cada jockey correspondiente
     - Verificar que exista el caballo y agregar al jockey 
+
+
+### 2026/11/21
+  - Programa de recopilacion de archivos finalizado
+        - Funciones agregadas:  
+          - Buscar por DNI y buscar por identificador de caballo
+          - Apareo de datos implementado a la hora de ordenar los datos de los archivos
+  - Programa de consulta de datos en desarrollo:
+    - busqueda binaria y corte de control implementados
+    - proximo a agregar: busqueda directa con el DNI el jockey
