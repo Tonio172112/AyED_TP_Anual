@@ -103,6 +103,10 @@ bool buscarId(NodoCaballo*& lista, int id, bool porIdCaballo=false);
 bool buscarId(NodoJockey*& lista, int id);
 void actualizarJockeyEnArchivoCaballos(int idCaballo, int idJockeyNuevo);
 void mostrarMenu();
+void insertarOrdenado(NodoClima*& lista, Clima nuevo);
+void insertarOrdenado(NodoMovSismicos*& lista, MovSismicos nuevo);
+void insertarOrdenado(NodoCaballo*& lista, Caballo nuevo);
+void insertarOrdenado(NodoJockey*& lista, Jockey nuevo);
 
 
 int main(){
@@ -222,39 +226,168 @@ void guardarLista(FILE* f, NodoJockey*& lista) {
     }
 }
 
-void guardarEnArchivo(NodoClima*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "ab");
-    if(f != NULL) {
-        guardarLista(f, lista);
-        fclose(f);
-    }
-}
+
 
 void guardarEnArchivo(NodoMovSismicos*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "ab");
-    if(f != NULL) {
-        guardarLista(f, lista);
-        fclose(f);
+    FILE* fViejo = fopen(nombreArchivo, "rb");         
+    FILE* fNuevo = fopen("../Archivos/temporal.dat", "wb");
+    if(fNuevo == NULL) {
+        cout << "Error: no se pudo crear el archivo temporal." << endl;
+        if(fViejo != NULL) fclose(fViejo);
+        return;
     }
+
+    MovSismicos reg;                 
+    bool hayReg = false;     
+    if(fViejo != NULL) hayReg = (fread(&reg, sizeof(MovSismicos), 1, fViejo) == 1);
+
+    NodoMovSismicos* aux = lista;     
+
+    while(hayReg && aux != NULL) {
+        if(reg.id < aux->info.id) {
+            guardarDato(fNuevo, reg);
+            hayReg = (fread(&reg, sizeof(MovSismicos), 1, fViejo) == 1);
+        } else {
+            guardarDato(fNuevo, aux->info);
+            aux = aux->sgte;
+        }
+    }
+
+    while(hayReg) {
+        guardarDato(fNuevo, reg);
+        hayReg = (fread(&reg, sizeof(MovSismicos), 1, fViejo) == 1);
+    }
+
+    guardarLista(fNuevo, aux);
+
+    if(fViejo != NULL) fclose(fViejo);
+    fclose(fNuevo);
+    remove(nombreArchivo);                      
+    rename("../Archivos/temporal.dat", nombreArchivo);  
 }
+
 
 void guardarEnArchivo(NodoCaballo*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "ab");
-    if(f != NULL) {
-        guardarLista(f, lista);
-        fclose(f);
+    FILE* fViejo = fopen(nombreArchivo, "rb");         
+    FILE* fNuevo = fopen("../Archivos/temporal.dat", "wb");
+    if(fNuevo == NULL) {
+        cout << "Error: no se pudo crear el archivo temporal." << endl;
+        if(fViejo != NULL) fclose(fViejo);
+        return;
     }
+
+    Caballo reg;                 
+    bool hayReg = false;     
+    if(fViejo != NULL) hayReg = (fread(&reg, sizeof(Caballo), 1, fViejo) == 1);
+
+    NodoCaballo* aux = lista;       
+
+    while(hayReg && aux != NULL) {
+        if(reg.id < aux->info.id) {
+            guardarDato(fNuevo, reg);
+            hayReg = (fread(&reg, sizeof(Caballo), 1, fViejo) == 1);
+        } else {
+            guardarDato(fNuevo, aux->info);
+            aux = aux->sgte;
+        }
+    }
+
+    while(hayReg) {
+        guardarDato(fNuevo, reg);
+        hayReg = (fread(&reg, sizeof(Caballo), 1, fViejo) == 1);
+    }
+
+    
+    guardarLista(fNuevo, aux);
+
+    if(fViejo != NULL) fclose(fViejo);
+    fclose(fNuevo);
+    remove(nombreArchivo);                      
+    rename("../Archivos/temporal.dat", nombreArchivo);  
 }
+
 
 void guardarEnArchivo(NodoJockey*& lista, const char* nombreArchivo) {
-    FILE* f = fopen(nombreArchivo, "ab");
-    if(f != NULL) {
-        guardarLista(f, lista);
-        fclose(f);
+    FILE* fViejo = fopen(nombreArchivo, "rb");          
+    FILE* fNuevo = fopen("../Archivos/temporal.dat", "wb");
+    if(fNuevo == NULL) {
+        cout << "Error: no se pudo crear el archivo temporal." << endl;
+        if(fViejo != NULL) fclose(fViejo);
+        return;
     }
+
+    Jockey reg;                  
+    bool hayReg = false;   
+    if(fViejo != NULL) hayReg = (fread(&reg, sizeof(Jockey), 1, fViejo) == 1);
+
+    NodoJockey* aux = lista;    
+
+    while(hayReg && aux != NULL) {
+        if(reg.id < aux->info.id) {
+            guardarDato(fNuevo, reg);
+            hayReg = (fread(&reg, sizeof(Jockey), 1, fViejo) == 1);
+        } else {
+            guardarDato(fNuevo, aux->info);
+            aux = aux->sgte;
+        }
+    }
+
+    while(hayReg) {
+        guardarDato(fNuevo, reg);
+        hayReg = (fread(&reg, sizeof(Jockey), 1, fViejo) == 1);
+    }
+
+
+    guardarLista(fNuevo, aux);
+
+    if(fViejo != NULL) fclose(fViejo);
+    fclose(fNuevo);
+    remove(nombreArchivo);                      
+    rename("../Archivos/temporal.dat", nombreArchivo);  
+
+
 }
 
-// Funciones para liberar memoria RAM de las listas
+void guardarEnArchivo(NodoClima*& lista, const char* nombreArchivo) {
+    FILE* fViejo = fopen(nombreArchivo, "rb");        
+    FILE* fNuevo = fopen("../Archivos/temporal.dat", "wb");
+    if(fNuevo == NULL) {
+        cout << "Error: no se pudo crear el archivo temporal." << endl;
+        if(fViejo != NULL) fclose(fViejo);
+        return;
+    }
+
+    Clima reg;                  
+    bool hayReg = false;         
+    if(fViejo != NULL) hayReg = (fread(&reg, sizeof(Clima), 1, fViejo) == 1);
+
+    NodoClima* aux = lista;   
+
+    while(hayReg && aux != NULL) {
+        if(reg.id < aux->info.id) {
+            guardarDato(fNuevo, reg);
+            hayReg = (fread(&reg, sizeof(Clima), 1, fViejo) == 1);
+        } else {
+            guardarDato(fNuevo, aux->info);
+            aux = aux->sgte;
+        }
+    }
+
+    while(hayReg) {
+        guardarDato(fNuevo, reg);
+        hayReg = (fread(&reg, sizeof(Clima), 1, fViejo) == 1);
+    }
+
+    guardarLista(fNuevo, aux);
+
+    if(fViejo != NULL) fclose(fViejo);
+    fclose(fNuevo);
+    remove(nombreArchivo);                   
+    rename("../Archivos/temporal.dat", nombreArchivo); 
+}
+
+
+
 void liberarLista(NodoClima*& lista) {
     while(lista != NULL) {
         NodoClima* aux = lista;
@@ -350,13 +483,18 @@ void llenarConDatos(NodoClima*& lista){
         cout << "Ingrese la descripcion del clima: ";
         cin.ignore();
         cin.getline(nuevo.descripcion, 256);
-        cout << "Ingrese los mm de agua caida: ";
-        cin >> nuevo.mmAguaCaida;
+        do{
+            error = false;
+            cout << "Ingrese los mm de agua caida: ";
+            cin >> nuevo.mmAguaCaida;
+            if(nuevo.mmAguaCaida < 0){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " Los mm de agua caida no pueden ser negativos, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);
 
-        NodoClima* nuevoNodo = new NodoClima;
-        nuevoNodo->info = nuevo;
-        nuevoNodo->sgte = lista;
-        lista = nuevoNodo;
+        insertarOrdenado(lista, nuevo);
 
         cout << "Desea ingresar otro dato? (1 para si, 0 para no): ";
         cin >> continuar;
@@ -391,10 +529,7 @@ void llenarConDatos(NodoMovSismicos*& lista){
         cout << "Ingrese la longitud: "; cin >> nuevo.longitud;
         cout << "Ingrese la magnitud: "; cin >> nuevo.magnitud;
 
-        NodoMovSismicos* nuevoNodo = new NodoMovSismicos;
-        nuevoNodo->info = nuevo;
-        nuevoNodo->sgte = lista;
-        lista = nuevoNodo;
+        insertarOrdenado(lista, nuevo);
 
         cout << "Desea ingresar otro dato? (1 para si, 0 para no): ";
         cin >> continuar;
@@ -442,10 +577,7 @@ void llenarConDatos(NodoCaballo*& lista){
         cout << "Ingrese el minuto de la ultima carrera: "; cin >> nuevo.ultimaCarrera.tiempo.minuto;
         cout << "Ingrese el segundo de la ultima carrera: "; cin >> nuevo.ultimaCarrera.tiempo.segundo;
 
-        NodoCaballo* nuevoNodo = new NodoCaballo;
-        nuevoNodo->info = nuevo;
-        nuevoNodo->sgte = lista;
-        lista = nuevoNodo;
+        insertarOrdenado(lista, nuevo);
 
         cout << "Desea ingresar otro dato? (1 para si, 0 para no): ";
         cin >> continuar;
@@ -552,10 +684,7 @@ void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos){
             cin >> agregarCaballo;
         }
 
-        NodoJockey* nuevoNodo = new NodoJockey;
-        nuevoNodo->info = nuevo;
-        nuevoNodo->sgte = listaJockeys;
-        listaJockeys = nuevoNodo;
+        insertarOrdenado(listaJockeys, nuevo);
 
         cout << "Desea ingresar otro jockey? (1 para si, 0 para no): ";
         cin >> continuar;
@@ -666,4 +795,63 @@ bool buscarId(NodoJockey*& lista, int id){
     }
     fclose(f);
     return false;
+}
+
+void insertarOrdenado(NodoClima*& lista, Clima nuevo){
+    NodoClima* nodo = new NodoClima;
+    nodo->info = nuevo;
+    if(lista == NULL || nuevo.id < lista->info.id){
+        nodo->sgte = lista;
+        lista = nodo;
+        return;
+    }
+    NodoClima* aux = lista;
+    while(aux->sgte != NULL && aux->sgte->info.id < nuevo.id)
+        aux = aux->sgte;
+    nodo->sgte = aux->sgte;
+    aux->sgte = nodo;
+}
+
+void insertarOrdenado(NodoCaballo*& lista, Caballo nuevo){
+    NodoCaballo* nodo = new NodoCaballo;
+    nodo->info = nuevo;
+    if(lista == NULL || nuevo.id < lista->info.id){
+        nodo->sgte = lista;
+        lista = nodo;
+        return;
+    }
+    NodoCaballo* aux = lista;
+    while(aux->sgte != NULL && aux->sgte->info.id < nuevo.id)
+        aux = aux->sgte;
+    nodo->sgte = aux->sgte;
+    aux->sgte = nodo;
+}
+
+void insertarOrdenado(NodoMovSismicos*& lista, MovSismicos nuevo){
+    NodoMovSismicos* nodo = new NodoMovSismicos;
+    nodo->info = nuevo;
+    if(lista == NULL || nuevo.id < lista->info.id){
+        nodo->sgte = lista;
+        lista = nodo;
+        return;
+    }
+    NodoMovSismicos* aux = lista;
+    while(aux->sgte != NULL && aux->sgte->info.id < nuevo.id)
+        aux = aux->sgte;
+    nodo->sgte = aux->sgte;
+    aux->sgte = nodo;
+}
+void insertarOrdenado(NodoJockey*& lista, Jockey nuevo){
+    NodoJockey* nodo = new NodoJockey;
+    nodo->info = nuevo;
+    if(lista == NULL || nuevo.id < lista->info.id){
+        nodo->sgte = lista;
+        lista = nodo;
+        return;
+    }
+    NodoJockey* aux = lista;
+    while(aux->sgte != NULL && aux->sgte->info.id < nuevo.id)
+        aux = aux->sgte;
+    nodo->sgte = aux->sgte;
+    aux->sgte = nodo;
 }
