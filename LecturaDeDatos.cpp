@@ -21,15 +21,20 @@ struct FechaHora{
 };
 
 struct Clima{
-    int id;
-    Fecha fecha;
+    int id; // (unico)
+    Fecha fecha; 
     int temperaturas[3];
     char descripcion[256+1];
     int mmAguaCaida;
 };
 
+struct NodoClima{
+    Clima info;
+    NodoClima* sgte;
+};
+
 struct MovSismicos{
-    int id;
+    int id; // (unico)
     Fecha fechaReg;
     char paisReg[56+1];
     double latitud;
@@ -37,12 +42,17 @@ struct MovSismicos{
     float magnitud;
 };
 
+struct NodoMovSismicos{
+    MovSismicos info;
+    NodoMovSismicos* sgte;
+};
+
 struct Caballo{
-    int id; 
-    int idJockey; 
+    int id; // (unico)
+    int idJockey; // Clave foranea para vincular al jockey en el archivo
     char nombre[100+1];
-    int idCaballo; 
-    float velocidadMaxima; 
+    int idCaballo; // (unico)
+    float velocidadMaxima; // (Km/h)
     float peso;
     float tamanoHerradura;
     FechaHora ultimaCarrera;
@@ -56,9 +66,14 @@ struct NodoCaballo{
 struct Jockey{
     int id;
     char nombreApellido[100+1];
-    int DNI; 
+    int DNI; // (unico)
     int edad;
-    NodoCaballo* listaCaballos;
+    NodoCaballo* listaCaballos; // Sublista en memoria RAM
+};
+
+struct NodoJockey{
+    Jockey info;
+    NodoJockey* sgte;
 };
 
 void leerArchivo(FILE* f, Clima info);
@@ -69,6 +84,7 @@ void mostrarDatos(const char* nombreArchivo, Clima info);
 void mostrarDatos(const char* nombreArchivo, MovSismicos info);
 void mostrarDatos(const char* nombreArchivo, Caballo info);
 void mostrarJockeysConCaballos(const char* archivoJockeys, const char* archivoCaballos);
+void menu();
 
 int main(){
     cout << "=== LECTURA DE ARCHIVOS ===" << endl;
@@ -82,6 +98,49 @@ int main(){
     mostrarJockeysConCaballos("../Archivos/jockeys.dat", "../Archivos/caballos.dat");
     return 0;
 }
+
+void menu(){
+    NodoClima* listaClima = NULL;
+    NodoMovSismicos* listaSismos = NULL;
+    NodoCaballo* listaCaballos = NULL;
+    NodoJockey* listaJockeys = NULL;
+    int opcion;
+
+    do {
+        cout << "\n==-== MENU PARA CONSULTAS ==-==" << endl;
+        cout << "1. Busqueda por id" << endl;
+        cout << "2. Consultar dias catastroficos" << endl;
+        cout << "3. Ingresar datos de caballos" << endl;
+        cout << "4. Ingresar datos de jockeys" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Seleccione una opcion (0 para salir): ";
+        cin >> opcion;
+
+        switch(opcion){
+
+            case 1:
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+
+            case 0:
+                cout << "Finalizando programa..." << endl;
+                break;
+
+            default:
+                cout << "Opcion incorrecta." << endl;
+        }
+
+    } while(opcion != 0);
+}
+
 
 
 //Lee y muestra el dato
