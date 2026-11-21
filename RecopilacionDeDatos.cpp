@@ -97,7 +97,7 @@ void llenarConDatos(NodoClima*& lista);
 void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
 void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos);
-bool buscarId(NodoClima*& lista, int id);
+bool buscarId(NodoClima*& lista, int id, bool fecha=false, Fecha fechaBuscada={0,0,0});
 bool buscarId(NodoMovSismicos*& lista, int id);
 bool buscarId(NodoCaballo*& lista, int id, bool porIdCaballo=false);
 bool buscarId(NodoJockey*& lista, int id);
@@ -304,16 +304,26 @@ void llenarConDatos(NodoClima*& lista){
             cout << " Ingrese el ID del clima (Ingrese 0 para salir): ";
             cin >> nuevo.id;
             if(nuevo.id < 1) return;
-            if(buscarId(lista, nuevo.id)){
+            if(buscarId(lista, nuevo.id, false, nuevo.fecha)){
                 cout << "\n------------------Error------------------" << endl;
                 cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
                 error = true;
             }
         }while(error);
-
+        
+        do{
+        error = false;
         cout << "Ingrese el dia del clima: "; cin >> nuevo.fecha.dia;
         cout << "Ingrese el mes del clima: "; cin >> nuevo.fecha.mes;
         cout << "Ingrese el anio del clima: "; cin >> nuevo.fecha.anio;
+         
+        if(buscarId(lista, nuevo.id, true, nuevo.fecha)){
+                cout << "\n------------------Error------------------" << endl;
+                cout << " Ya existe un registro para esa fecha, ingrese nuevamente. . ." << endl;
+                error = true;
+            }
+        }while(error);    
+
         cout << "Ingrese las temperaturas (3 valores): ";
         for(int i = 0; i < 3; i++){
             cin >> nuevo.temperaturas[i];
@@ -552,19 +562,49 @@ void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos){
     }
 }
 
-// Funciones de búsqueda
-bool buscarId(NodoClima*& lista, int id){
+
+bool buscarId(NodoClima*& lista, int id, bool fecha, Fecha fechaBuscada){
     NodoClima* aux = lista;
+
     while(aux != NULL){
-        if(aux->info.id == id) return true;
+        if(fecha){
+            if(aux->info.fecha.dia == fechaBuscada.dia &&
+               aux->info.fecha.mes == fechaBuscada.mes &&
+               aux->info.fecha.anio == fechaBuscada.anio){
+                return true;
+            }
+        }
+        else{
+            if(aux->info.id == id){
+                return true;
+            }
+        }
+
         aux = aux->sgte;
     }
+
     Clima datos;
     FILE* f = fopen("../Archivos/clima.dat", "rb");
+
     if(f == NULL) return false;
-    while(fread(&datos, sizeof(Clima), 1, f) == 1) {
-        if(datos.id == id){ fclose(f); return true; }
+
+    while(fread(&datos, sizeof(Clima), 1, f) == 1){
+        if(fecha){
+            if(datos.fecha.dia == fechaBuscada.dia &&
+               datos.fecha.mes == fechaBuscada.mes &&
+               datos.fecha.anio == fechaBuscada.anio){
+                fclose(f);
+                return true;
+            }
+        }
+        else{
+            if(datos.id == id){
+                fclose(f);
+                return true;
+            }
+        }
     }
+
     fclose(f);
     return false;
 }
