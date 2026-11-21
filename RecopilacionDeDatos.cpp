@@ -99,7 +99,7 @@ void llenarConDatos(NodoCaballo*& lista);
 void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos);
 bool buscarId(NodoClima*& lista, int id);
 bool buscarId(NodoMovSismicos*& lista, int id);
-bool buscarId(NodoCaballo*& lista, int id);
+bool buscarId(NodoCaballo*& lista, int id, bool porIdCaballo=false);
 bool buscarId(NodoJockey*& lista, int id);
 void actualizarJockeyEnArchivoCaballos(int idCaballo, int idJockeyNuevo);
 void mostrarMenu();
@@ -134,7 +134,7 @@ void mostrarMenu(){
             case 1:
                 llenarConDatos(listaClima);
                 guardarEnArchivo(listaClima, "../Archivos/clima.dat");
-                liberarLista(listaClima); // Limpiamos la RAM para evitar duplicados en la misma ejecución
+                liberarLista(listaClima); // Evitar duplicados en la misma ejecución
                 break;
 
             case 2:
@@ -318,6 +318,25 @@ void llenarConDatos(NodoClima*& lista){
         for(int i = 0; i < 3; i++){
             cin >> nuevo.temperaturas[i];
         }
+        //ORDENAMIENTO ADCENDETE
+        float aux;
+        if(nuevo.temperaturas[0]>nuevo.temperaturas[1]){
+            aux=nuevo.temperaturas[0];
+            nuevo.temperaturas[0]=nuevo.temperaturas[1];
+            nuevo.temperaturas[1]=aux;
+        }
+        if(nuevo.temperaturas[1]>nuevo.temperaturas[2]){
+            aux=nuevo.temperaturas[1];
+            nuevo.temperaturas[1]=nuevo.temperaturas[2];
+            nuevo.temperaturas[2]=aux;
+
+        }
+        if(nuevo.temperaturas[0]>nuevo.temperaturas[1]){
+            aux=nuevo.temperaturas[0];
+            nuevo.temperaturas[0]=nuevo.temperaturas[1];
+            nuevo.temperaturas[1]=aux;
+
+        }
         cout << "Ingrese la descripcion del clima: ";
         cin.ignore();
         cin.getline(nuevo.descripcion, 256);
@@ -383,7 +402,7 @@ void llenarConDatos(NodoCaballo*& lista){
             cout << " Ingrese el ID del caballo (Ingrese 0 para salir): ";
             cin >> nuevo.id;
             if(nuevo.id < 1) return;
-            if(buscarId(lista, nuevo.id)){
+            if(buscarId(lista, nuevo.id, 0)){
                 cout << "\n------------------Error------------------" << endl;
                 cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
                 error = true;
@@ -394,7 +413,15 @@ void llenarConDatos(NodoCaballo*& lista){
         cout << "Ingrese el nombre del caballo: ";
         cin.ignore();
         cin.getline(nuevo.nombre, 100);
-        cout << "Ingrese la identificacion del caballo: "; cin >> nuevo.idCaballo;
+        do{
+            error=false;
+            cout << "Ingrese la identificacion del caballo: "; cin >> nuevo.idCaballo;
+                if(buscarId(lista, nuevo.idCaballo, 1)){
+                    cout << "\n------------------Error------------------" << endl;
+                    cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
+                    error = true;
+                }
+        }while(error);
         cout << "Ingrese la velocidad maxima (Km/h): "; cin >> nuevo.velocidadMaxima;
         cout << "Ingrese el peso: "; cin >> nuevo.peso;
         cout << "Ingrese el tamano de herradura: "; cin >> nuevo.tamanoHerradura;
@@ -468,7 +495,7 @@ void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos){
             cin >> idCab;
 
             // Utilizamos buscarId para validar si el caballo existe (en RAM o en archivo)
-            if(buscarId(listaCaballos, idCab)){
+            if(buscarId(listaCaballos, idCab, 0)){
                 Caballo caballoAsignado;
                 bool encontradoEnRam = false;
 
@@ -558,21 +585,32 @@ bool buscarId(NodoMovSismicos*& lista, int id){
     return false;
 }
 
-bool buscarId(NodoCaballo*& lista, int id){
+bool buscarId(NodoCaballo*& lista, int id, bool porIdCaballo){
     NodoCaballo* aux = lista;
     while(aux != NULL){
-        if(aux->info.id == id) return true;
+        if(porIdCaballo){
+            if(aux->info.idCaballo == id) return true;
+        } else {
+            if(aux->info.id == id) return true;
+        }
         aux = aux->sgte;
     }
+
     Caballo datos;
     FILE* f = fopen("../Archivos/caballos.dat", "rb");
     if(f == NULL) return false;
+
     while(fread(&datos, sizeof(Caballo), 1, f) == 1) {
-        if(datos.id == id){ fclose(f); return true; }
+        if(porIdCaballo){
+            if(datos.idCaballo == id){ fclose(f); return true; }
+        } else {
+            if(datos.id == id){ fclose(f); return true; }
+        }
     }
     fclose(f);
     return false;
 }
+
 
 bool buscarId(NodoJockey*& lista, int id){
     NodoJockey* aux = lista;

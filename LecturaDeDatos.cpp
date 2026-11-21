@@ -120,7 +120,21 @@ void leerArchivo(FILE* f, Caballo info) {
         cout << "Velocidad Maxima: " << info.velocidadMaxima << " Km/h" << endl;
         cout << "Peso: " << info.peso << endl;
         cout << "Tamano herradura: " << info.tamanoHerradura << endl;
-        cout << "Ultima carrera: " << info.ultimaCarrera.fecha.dia << "/" << info.ultimaCarrera.fecha.mes << "/" << info.ultimaCarrera.fecha.anio << endl;
+        
+        int h= info.ultimaCarrera.tiempo.hora;
+        int min= info.ultimaCarrera.tiempo.minuto;
+        int seg= info.ultimaCarrera.tiempo.segundo;
+        const char* ampm= (h>=12) ? "PM":"AM";
+        int hora12= h % 12;
+        if(hora12==0)hora12=12;
+        cout << "Ultima carrera: "
+        <<info.ultimaCarrera.fecha.dia<< "/"
+        <<info.ultimaCarrera.fecha.mes<< "/"
+        <<info.ultimaCarrera.fecha.anio<< " "
+        <<hora12<< ":"
+        <<(min<10 ? "0":"")<<min<< ":"
+        <<(seg<10 ? "0":"")<<seg<< " "
+        <<ampm<<"GMT -3"<< endl;
         cout << "-----------------------------------" << endl;
     }
 }
