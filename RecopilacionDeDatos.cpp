@@ -97,6 +97,7 @@ void liberarLista(NodoJockey*& lista);
 void llenarConDatos(NodoClima*& lista);
 void llenarConDatos(NodoMovSismicos*& lista);
 void llenarConDatos(NodoCaballo*& lista);
+int obtenerSiguienteIdJockey(NodoJockey* listaJockeys, const char* nombreArchivo);
 void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos);
 bool buscarId(NodoClima*& lista, int id, bool fecha=false, Fecha fechaBuscada={0,0,0});
 bool buscarId(NodoMovSismicos*& lista, int id);
@@ -575,6 +576,32 @@ void llenarConDatos(NodoCaballo*& lista){
     }
 }
 
+// Calcula el siguiente ID secuencial y autoincremental para jockeys (1, 2, 3...)
+int obtenerSiguienteIdJockey(NodoJockey* listaJockeys, const char* nombreArchivo){
+    int maxId = 0;
+
+    FILE* f = fopen(nombreArchivo, "rb");
+    if(f != NULL){
+        Jockey reg;
+        while(fread(&reg, sizeof(Jockey), 1, f) == 1){
+            if(reg.id > maxId){
+                maxId = reg.id;
+            }
+        }
+        fclose(f);
+    }
+
+    NodoJockey* aux = listaJockeys;
+    while(aux != NULL){
+        if(aux->info.id > maxId){
+            maxId = aux->info.id;
+        }
+        aux = aux->sgte;
+    }
+
+    return maxId + 1;
+}
+
 // Función auxiliar para actualizar el idJockey directamente en el archivo binario de caballos
 void actualizarJockeyEnArchivoCaballos(int idCaballo, int idJockeyNuevo) {
     FILE* f = fopen("../Archivos/caballos.dat", "r+b");
@@ -600,23 +627,15 @@ void actualizarJockeyEnArchivoCaballos(int idCaballo, int idJockeyNuevo) {
     fclose(f);
 }
 
-// Carga de Jockeys utilizando buscarId para verificar el caballo
+// Carga de Jockeys con ID autoincremental secuencial
 void llenarConDatos(NodoJockey*& listaJockeys, NodoCaballo*& listaCaballos){
-    bool continuar = true;
-    while(continuar){
+    int continuar = 1;
+    while(continuar != 0){
         Jockey nuevo;
         bool error = false;
-        do{
-            error = false;
-            cout << " Ingrese el ID del jockey (Ingrese 0 para salir): ";
-            cin >> nuevo.id;
-            if(nuevo.id < 1) return;
-            if(buscarId(listaJockeys, nuevo.id)){
-                cout << "\n------------------Error------------------" << endl;
-                cout << " El ID ingresado ya se encuentra registrado, ingrese nuevamente. . ." << endl;
-                error = true;
-            }
-        }while(error);
+
+        nuevo.id = obtenerSiguienteIdJockey(listaJockeys, "../Archivos/jockeys.dat");
+        cout << "\nID de jockey asignado automaticamente: " << nuevo.id << endl;
 
         cout << "Ingrese el nombre y apellido del jockey: ";
         cin.ignore();
