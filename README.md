@@ -3,10 +3,7 @@
 Repositorio destinado al desarrollo, resolución y entrega del Trabajo Práctico Anual de la materia **Algoritmos y Estructuras de Datos**, dictado por la docente **Roxana Leituz** en la **Universidad Tecnológica Nacional - Facultad Regional Buenos Aires (UTN.BA)**.
 
 ## 👥 Integrantes
-* **Vinazza Antonio**
-* **Burgos Victoria**
-
-
+* **Vinazza Antonio** y **Burgos Victoria**
 ---
 
 ## 🎯 Descripción del Proyecto
