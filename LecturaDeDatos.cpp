@@ -1110,6 +1110,7 @@ void edadesJockeys(const char* archJockeys, const char* archCaballos){
         return;
     }
 
+    // Edad de corte modificable
     int edadCorte = 21;
     NodoJockey* mayores = NULL;
     NodoJockey* menores = NULL;
